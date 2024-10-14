@@ -1,10 +1,8 @@
-// imageController.js
-const { Request, Response, NextFunction } = require("express");
-const Image = require('../model/imageModal')
+const Image = require('../model/imageModal');
 const multer = require("multer");
 const { v4: uuidv4 } = require("uuid");
-const s3 = require("../utils/s3");
-const { PutObjectCommand, DeleteObjectCommand } = require("@aws-sdk/client-s3");
+const s3 = require('../utils/s3');
+const { S3Client,PutObjectCommand, DeleteObjectCommand } = require("@aws-sdk/client-s3");
 
 const upload = multer({
     storage: multer.memoryStorage(),
@@ -55,7 +53,11 @@ const uploadImages = async (req, res, next) => {
                 ContentType: file.mimetype,
             };
 
-            await s3.send(new PutObjectCommand(params));
+            console.log("S3 Client:", s3);
+            // Check if s3 is an instance of S3Client
+            console.log("Is s3 instance of S3Client?", s3 instanceof S3Client);
+
+            await s3.send(new PutObjectCommand(params)); 
 
             const imageUrl = `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${imageKey}`;
 
@@ -81,7 +83,6 @@ const uploadImages = async (req, res, next) => {
         res.status(500).json({ error: "Error uploading images" });
     }
 };
-
 const getImages = async (req, res, next) => {
     try {
         if (!req.user) {
