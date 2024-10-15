@@ -26,7 +26,7 @@ const limiter = rateLimit({
 app.use(limiter);
 app.use(express.json());
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: 'https://stock-image-frontend.vercel.app',
     credentials: true,
 }));
 app.use(cookieParser());
