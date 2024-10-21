@@ -1,7 +1,8 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
-const createActivationToken = (user) => {// 4-digit activation code
+const createActivationToken = (user) => {
+    const activationCode = Math.floor(1000 + Math.random() * 9000).toString();
     const token = jwt.sign(
         { user, activationCode },
         process.env.JWT_SECRET,
